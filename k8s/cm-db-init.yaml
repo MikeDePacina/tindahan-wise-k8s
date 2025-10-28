@@ -1,0 +1,24 @@
+apiVersion: v1
+data:
+  init.sql: "CREATE TABLE IF NOT EXISTS sales\n(\n    -- sale_id integer NOT NULL
+    DEFAULT nextval('sales_sale_id_seq'::regclass),\n    sale_id SERIAL PRIMARY KEY,\n
+    \   customer_id integer NOT NULL,\n    transaction_occured timestamp with time
+    zone DEFAULT CURRENT_TIMESTAMP,\n    total_amount numeric(10,2) DEFAULT 0\n    --
+    CONSTRAINT sales_pkey PRIMARY KEY (sale_id)\n);\n\n\nCREATE TABLE IF NOT EXISTS
+    sale_items\n(\n    -- sale_item_id integer NOT NULL DEFAULT nextval('sale_items_sale_item_id_seq'::regclass),\n
+    \   sale_item_id SERIAL PRIMARY KEY,\n    sale_id integer NOT NULL,\n    item_name
+    character varying(255) COLLATE pg_catalog.\"default\" NOT NULL,\n    quantity
+    integer NOT NULL,\n    price numeric(10,2) NOT NULL,\n    subtotal numeric(10,2)
+    GENERATED ALWAYS AS (((quantity)::numeric * price)) STORED,\n    -- CONSTRAINT
+    sale_items_pkey PRIMARY KEY (sale_item_id),\n    CONSTRAINT sale_items_sale_id_fkey
+    FOREIGN KEY (sale_id)\n        REFERENCES public.sales (sale_id) MATCH SIMPLE\n
+    \       ON UPDATE NO ACTION\n        ON DELETE CASCADE,\n    CONSTRAINT sale_items_quantity_check
+    CHECK (quantity > 0),\n    CONSTRAINT sale_items_price_check CHECK (price >= 0::numeric)\n);\n\n\nINSERT
+    INTO sales(customer_id, total_amount) \n    VALUES \n    (1, 150), \n    (2, 12),
+    \n    (3, 55);\n\nINSERT INTO sale_items(sale_id, item_name, quantity, price)\n
+    \   VALUES \n    (1, 'mantika', 1, 45.00), \n    (1, 'red horse', 1, 105), \n
+    \   (2, 'sibuyas', 2, 6), \n    (3, 'cigarilyo', 1, 55);"
+kind: ConfigMap
+metadata:
+  name: db-init
+  namespace: tindahan-wise

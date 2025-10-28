@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  TRANSACTIONS_SERVICE_HOST: svc-transactions-service
+  TRANSACTIONS_SERVICE_PORT: "3002"
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: tindahan-wise

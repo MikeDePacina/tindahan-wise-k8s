@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  POSTGRES_DB: salesdb
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_USER: postgres
+kind: ConfigMap
+metadata:
+  name: db-config
+  namespace: tindahan-wise

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: tindahan-wise
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: 'postgres'
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: db-config
+          volumeMounts:
+            - mountPath: /var/lib/postgresql
+              name: postgresdata
+            - name: init-sql
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: postgresdata
+          persistentVolumeClaim:
+            claimName: postgres-volume-claim
+        - name: init-sql
+          configMap:
+            name: db-init
+
