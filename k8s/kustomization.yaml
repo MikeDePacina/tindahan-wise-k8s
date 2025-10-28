@@ -14,4 +14,4 @@ resources:
 - svc-transactions-service.yaml
 - pv-db.yaml
 - pvc-db.yaml
-
+- frontend-ingress.yaml

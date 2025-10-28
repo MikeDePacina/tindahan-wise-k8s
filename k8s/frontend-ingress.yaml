@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tw-frontend-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: tindahan-wise.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: svc-frontend
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
+status:
+  loadBalancer: {}
