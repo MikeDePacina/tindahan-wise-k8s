@@ -1,16 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-nameSuffix: -dev
-
 resources:
 - cm-db-config.yaml
 - cm-db-init.yaml
 - cm-frontend-config.yaml
-- tw-frontend.yaml
-- tw-transactions-service.yaml
+- tw-frontend-v2.yaml
+- tw-transactions-service-v2.yaml
 - pg-deploy.yaml
 - transactions-db-config.yaml
 - svc-db.yaml
 - svc-frontend.yaml
 - svc-transactions-service.yaml
+- pv-db.yaml
+- pvc-db.yaml
+

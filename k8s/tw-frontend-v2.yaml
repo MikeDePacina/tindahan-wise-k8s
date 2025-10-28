@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tw-frontend
+  name: tw-frontend
+  namespace: tindahan-wise
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tw-frontend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: tw-frontend
+    spec:
+      initContainers:
+      - image: alpine/curl
+        name: wait-transactions-service
+        command: ["sh", "-c"]
+        args:
+          - |
+            echo "Waiting for transactions-service..."
+            until curl -sf http://${TRANSACTIONS_SERVICE_HOST}:${TRANSACTIONS_SERVICE_PORT}/health > /dev/null; do
+              echo "transactions-service not ready..."
+              sleep 2
+            done
+            echo "✅ transactions-service is healthy!"
+        envFrom:
+        - configMapRef:
+            name: frontend-config 
+      containers:
+      - image: tindahan-wise-frontend
+        imagePullPolicy: IfNotPresent
+        name: tindahan-wise-frontend
+        envFrom:
+        - configMapRef:
+            name: frontend-config 
+        ports:
+        - containerPort: 3000
+        resources: {}
+status: {}
