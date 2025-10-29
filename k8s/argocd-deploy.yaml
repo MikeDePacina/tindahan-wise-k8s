@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tindahan-wise
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/MikeDePacina/tindahan-wise-k8s
+    targetRevision: main
+    path: k8s/
+  destination:
+    namespace: tindahan-wise 
+    name: in-cluster
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
